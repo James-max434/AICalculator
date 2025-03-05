@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepSeek 科學計算器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .calculator {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            width: 320px;
+        }
+        .display {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 24px;
+            height: 60px;
+            line-height: 60px;
+            margin-bottom: 10px;
+            padding: 0 10px;
+            text-align: right;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .button {
+            background-color: #607D8B;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 18px;
+            padding: 20px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .button:active {
+            background-color: #455A64;
+        }
+        .button.operator {
+            background-color: #FF9800;
+        }
+        .button.operator:active {
+            background-color: #F57C00;
+        }
+        .button.function {
+            background-color: #009688;
+        }
+        .button.function:active {
+            background-color: #00796B;
+        }
+        .button.clear {
+            background-color: #f44336;
+        }
+        .button.clear:active {
+            background-color: #d32f2f;
+        }
+        .button.equals {
+            background-color: #4CAF50;
+            grid-column: span 2;
+        }
+        .button.equals:active {
+            background-color: #388E3C;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div id="display" class="display">0</div>
+        <div class="buttons">
+            <button class="button clear" onclick="clearDisplay()">C</button>
+            <button class="button function" onclick="deleteLast()">DEL</button>
+            <button class="button function" onclick="addToDisplay('π')">π</button>
+            <button class="button operator" onclick="addToDisplay('^')">^</button>
+            <button class="button operator" onclick="addToDisplay('√')">√</button>
+            <button class="button operator" onclick="addToDisplay('/')">/</button>
+            <button class="button function" onclick="calculateFunction('sin')">sin</button>
+            <button class="button function" onclick="calculateFunction('cos')">cos</button>
+            <button class="button function" onclick="calculateFunction('tan')">tan</button>
+            <button class="button" onclick="addToDisplay('(')">(</button>
+            <button class="button" onclick="addToDisplay(')')">)</button>
+            <button class="button operator" onclick="addToDisplay('*')">*</button>
+            <button class="button" onclick="addToDisplay('7')">7</button>
+            <button class="button" onclick="addToDisplay('8')">8</button>
+            <button class="button" onclick="addToDisplay('9')">9</button>
+            <button class="button function" onclick="calculateFunction('asin')">asin</button>
+            <button class="button function" onclick="calculateFunction('acos')">acos</button>
+            <button class="button operator" onclick="addToDisplay('-')">-</button>
+            <button class="button" onclick="addToDisplay('4')">4</button>
+            <button class="button" onclick="addToDisplay('5')">5</button>
+            <button class="button" onclick="addToDisplay('6')">6</button>
+            <button class="button function" onclick="calculateFunction('atan')">atan</button>
+            <button class="button function" onclick="calculateFunction('!')">x!</button>
+            <button class="button operator" onclick="addToDisplay('+')">+</button>
+            <button class="button" onclick="addToDisplay('1')">1</button>
+            <button class="button" onclick="addToDisplay('2')">2</button>
+            <button class="button" onclick="addToDisplay('3')">3</button>
+            <button class="button function" onclick="toggleSign()">±</button>
+            <button class="button function" onclick="addToDisplay('%')">%</button>
+            <button class="button equals" onclick="calculateResult()">=</button>
+            <button class="button" onclick="addToDisplay('0')">0</button>
+            <button class="button" onclick="addToDisplay('.')">.</button>
+            <button class="button function" onclick="addToDisplay('e')">e</button>
+            <button class="button function" onclick="toggleAngleMode()" id="angleMode">deg</button>
+        </div>
+    </div>
+
+    <script>
+        let display = document.getElementById('display');
+        let currentInput = '';
+        let angleMode = 'deg'; // 角度模式：deg 或 rad
+
+        // 更新顯示區域
+        function updateDisplay() {
+            display.textContent = currentInput || '0';
+        }
+
+        // 清除顯示
+        function clearDisplay() {
+            currentInput = '';
+            updateDisplay();
+        }
+
+        // 刪除最後一個字符
+        function deleteLast() {
+            currentInput = currentInput.slice(0, -1);
+            updateDisplay();
+        }
+
+        // 添加到顯示區域
+        function addToDisplay(value) {
+            if (value === 'π') {
+                currentInput += Math.PI.toString();
+            } else if (value === 'e') {
+                currentInput += Math.E.toString();
+            } else {
+                currentInput += value;
+            }
+            updateDisplay();
+        }
+
+        // 計算函數
+        function calculateFunction(func) {
+            try {
+                let value = parseFloat(currentInput);
+                let result;
+                switch (func) {
+                    case 'sin':
+                        result = Math.sin(angleMode === 'deg' ? (value * Math.PI / 180) : value);
+                        break;
+                    case 'cos':
+                        result = Math.cos(angleMode === 'deg' ? (value * Math.PI / 180) : value);
+                        break;
+                    case 'tan':
+                        result = Math.tan(angleMode === 'deg' ? (value * Math.PI / 180) : value);
+                        break;
+                    case 'asin':
+                        result = Math.asin(value);
+                        result = angleMode === 'deg' ? (result * 180 / Math.PI) : result;
+                        break;
+                    case 'acos':
+                        result = Math.acos(value);
+                        result = angleMode === 'deg' ? (result * 180 / Math.PI) : result;
+                        break;
+                    case 'atan':
+                        result = Math.atan(value);
+                        result = angleMode === 'deg' ? (result * 180 / Math.PI) : result;
+                        break;
+                    case '!':
+                        result = factorial(value);
+                        break;
+                    case '√':
+                        result = Math.sqrt(value);
+                        break;
+                    case '%':
+                        result = value / 100;
+                        break;
+                }
+                currentInput = result.toString();
+                updateDisplay();
+            } catch (error) {
+                alert('錯誤：' + error.message);
+                clearDisplay();
+            }
+        }
+
+        // 計算階乘
+        function factorial(n) {
+            if (n === 0 || n === 1) return 1;
+            return n * factorial(n - 1);
+        }
+
+        // 切換正負號
+        function toggleSign() {
+            if (currentInput.startsWith('-')) {
+                currentInput = currentInput.slice(1);
+            } else {
+                currentInput = '-' + currentInput;
+            }
+            updateDisplay();
+        }
+
+        // 切換角度模式
+        function toggleAngleMode() {
+            angleMode = angleMode === 'deg' ? 'rad' : 'deg';
+            document.getElementById('angleMode').textContent = angleMode;
+        }
+
+        // 計算結果
+        function calculateResult() {
+            try {
+                let expression = currentInput
+                    .replace(/√/g, 'Math.sqrt')
+                    .replace(/\^/g, '**')
+                    .replace(/π/g, Math.PI.toString())
+                    .replace(/e/g, Math.E.toString());
+                let result = eval(expression);
+                currentInput = result.toString();
+                updateDisplay();
+            } catch (error) {
+                alert('錯誤：' + error.message);
+                clearDisplay();
+            }
+        }
+    </script>
+</body>
+</html>
