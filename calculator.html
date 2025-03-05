@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DeepSeek 科學計算器</title>
     <style>
+        /* 基本樣式 */
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
@@ -14,107 +15,141 @@
             height: 100vh;
             margin: 0;
         }
+
+        /* 計算器外框 */
         .calculator {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            background-color: #2c3e50;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
             padding: 20px;
             width: 320px;
         }
+
+        /* 顯示區域 */
         .display {
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 24px;
-            height: 60px;
-            line-height: 60px;
-            margin-bottom: 10px;
-            padding: 0 10px;
+            background-color: #34495e;
+            border: none;
+            border-radius: 10px;
+            color: #ecf0f1;
+            font-size: 28px;
+            height: 80px;
+            line-height: 80px;
+            margin-bottom: 20px;
+            padding: 0 15px;
             text-align: right;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
         }
+
+        /* 按鈕區域 */
         .buttons {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
         }
+
+        /* 按鈕通用樣式 */
         .button {
-            background-color: #607D8B;
+            background-color: #34495e;
             border: none;
-            border-radius: 5px;
-            color: white;
-            font-size: 18px;
+            border-radius: 10px;
+            color: #ecf0f1;
+            font-size: 20px;
             padding: 20px;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: background-color 0.2s, transform 0.1s;
         }
+
+        .button:hover {
+            background-color: #3b4a5f;
+        }
+
         .button:active {
-            background-color: #455A64;
+            transform: scale(0.95);
         }
+
+        /* 運算符按鈕 */
         .button.operator {
-            background-color: #FF9800;
+            background-color: #e67e22;
+            color: #fff;
         }
-        .button.operator:active {
-            background-color: #F57C00;
+
+        .button.operator:hover {
+            background-color: #d35400;
         }
+
+        /* 功能按鈕 */
         .button.function {
-            background-color: #009688;
+            background-color: #3498db;
+            color: #fff;
         }
-        .button.function:active {
-            background-color: #00796B;
+
+        .button.function:hover {
+            background-color: #2980b9;
         }
+
+        /* 清除按鈕 */
         .button.clear {
-            background-color: #f44336;
+            background-color: #e74c3c;
+            color: #fff;
         }
-        .button.clear:active {
-            background-color: #d32f2f;
+
+        .button.clear:hover {
+            background-color: #c0392b;
         }
+
+        /* 等於按鈕 */
         .button.equals {
-            background-color: #4CAF50;
+            background-color: #2ecc71;
             grid-column: span 2;
+            color: #fff;
         }
-        .button.equals:active {
-            background-color: #388E3C;
+
+        .button.equals:hover {
+            background-color: #27ae60;
         }
     </style>
 </head>
 <body>
     <div class="calculator">
+        <!-- 顯示區域 -->
         <div id="display" class="display">0</div>
+
+        <!-- 按鈕區域 -->
         <div class="buttons">
             <button class="button clear" onclick="clearDisplay()">C</button>
             <button class="button function" onclick="deleteLast()">DEL</button>
             <button class="button function" onclick="addToDisplay('π')">π</button>
-            <button class="button operator" onclick="addToDisplay('^')">^</button>
-            <button class="button operator" onclick="addToDisplay('√')">√</button>
             <button class="button operator" onclick="addToDisplay('/')">/</button>
-            <button class="button function" onclick="calculateFunction('sin')">sin</button>
-            <button class="button function" onclick="calculateFunction('cos')">cos</button>
-            <button class="button function" onclick="calculateFunction('tan')">tan</button>
-            <button class="button" onclick="addToDisplay('(')">(</button>
-            <button class="button" onclick="addToDisplay(')')">)</button>
-            <button class="button operator" onclick="addToDisplay('*')">*</button>
+
             <button class="button" onclick="addToDisplay('7')">7</button>
             <button class="button" onclick="addToDisplay('8')">8</button>
             <button class="button" onclick="addToDisplay('9')">9</button>
-            <button class="button function" onclick="calculateFunction('asin')">asin</button>
-            <button class="button function" onclick="calculateFunction('acos')">acos</button>
-            <button class="button operator" onclick="addToDisplay('-')">-</button>
+            <button class="button operator" onclick="addToDisplay('*')">*</button>
+
             <button class="button" onclick="addToDisplay('4')">4</button>
             <button class="button" onclick="addToDisplay('5')">5</button>
             <button class="button" onclick="addToDisplay('6')">6</button>
-            <button class="button function" onclick="calculateFunction('atan')">atan</button>
-            <button class="button function" onclick="calculateFunction('!')">x!</button>
-            <button class="button operator" onclick="addToDisplay('+')">+</button>
+            <button class="button operator" onclick="addToDisplay('-')">-</button>
+
             <button class="button" onclick="addToDisplay('1')">1</button>
             <button class="button" onclick="addToDisplay('2')">2</button>
             <button class="button" onclick="addToDisplay('3')">3</button>
-            <button class="button function" onclick="toggleSign()">±</button>
-            <button class="button function" onclick="addToDisplay('%')">%</button>
-            <button class="button equals" onclick="calculateResult()">=</button>
+            <button class="button operator" onclick="addToDisplay('+')">+</button>
+
             <button class="button" onclick="addToDisplay('0')">0</button>
             <button class="button" onclick="addToDisplay('.')">.</button>
-            <button class="button function" onclick="addToDisplay('e')">e</button>
-            <button class="button function" onclick="toggleAngleMode()" id="angleMode">deg</button>
+            <button class="button function" onclick="toggleSign()">±</button>
+            <button class="button equals" onclick="calculateResult()">=</button>
+
+            <button class="button function" onclick="calculateFunction('sin')">sin</button>
+            <button class="button function" onclick="calculateFunction('cos')">cos</button>
+            <button class="button function" onclick="calculateFunction('tan')">tan</button>
+            <button class="button function" onclick="calculateFunction('√')">√</button>
+
+            <button class="button function" onclick="calculateFunction('asin')">asin</button>
+            <button class="button function" onclick="calculateFunction('acos')">acos</button>
+            <button class="button function" onclick="calculateFunction('atan')">atan</button>
+            <button class="button function" onclick="calculateFunction('!')">x!</button>
         </div>
     </div>
 
@@ -185,9 +220,6 @@
                     case '√':
                         result = Math.sqrt(value);
                         break;
-                    case '%':
-                        result = value / 100;
-                        break;
                 }
                 currentInput = result.toString();
                 updateDisplay();
@@ -211,12 +243,6 @@
                 currentInput = '-' + currentInput;
             }
             updateDisplay();
-        }
-
-        // 切換角度模式
-        function toggleAngleMode() {
-            angleMode = angleMode === 'deg' ? 'rad' : 'deg';
-            document.getElementById('angleMode').textContent = angleMode;
         }
 
         // 計算結果
